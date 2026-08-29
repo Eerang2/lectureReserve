@@ -1,17 +1,30 @@
 # .coderabbit.yaml
-language: "ko"              # 리뷰 언어 설정 (한국어)
+language: "ko"
+early_access: false
+
 reviews:
-  profile: "chill"      # chill | assertive (피드백 강도)
+  profile: "chill"
   request_changes_workflow: false
-  high_level_summary: true  # PR 요약 활성화
-  poem: false               # 리뷰 끝 시 비활성화
+  high_level_summary: true
+  poem: false
   review_status: true
 
-# 특정 경로 제외
-path_filters:
-  - "!**/*.lock"
-  - "!**/migrations/**"
-  - "!**/__generated__/**"
+  auto_review:
+    enabled: true
+    base_branches:
+      - "dev"
+      - "main"
 
-# 커스텀 리뷰 지침
-#instructions:
+  path_filters:
+    - "!**/*.lock"
+    - "!**/migrations/**"
+    - "!**/__generated__/**"
+
+  instructions: |
+    - 동시성 제어가 필요한 로직(강의 신청, 정원 카운트 증감, 대기열 순번 배정)에서 Race Condition 가능성이 있는지 반드시 확인해줘. 특히 "조회 후 판단 후 갱신" 패턴(check-then-act)이 원자적으로 처리되지 않은 경우 반드시 지적해줘.
+    - JPA 연관관계를 조회하는 코드에서 N+1 쿼리가 발생할 가능성이 있으면 지적하고, fetch join이나 @EntityGraph, batch size 설정 등 대안을 제안해줘.
+    - Redis를 사용하는 코드에서 TTL(만료 시간) 설정 누락, 분산락 해제(unlock) 누락, 락 획득 실패 시 예외 처리 누락이 없는지 확인해줘.
+    - 엔티티/DTO 필드명이 camelCase + PK는 `~Key` 네이밍 컨벤션(예: memberKey, lectureKey)을 따르는지 확인하고, 벗어나면 지적해줘.
+    - 컨트롤러에서 예외 처리 없이 그대로 예외가 전파되는 부분이 있으면, 적절한 예외 핸들링(@ExceptionHandler 등)으로 감싸도록 제안해줘.
+    - 트랜잭션(@Transactional) 범위가 너무 넓거나(불필요한 로직까지 포함) 반대로 필요한 곳에 빠져있는 경우를 확인해줘.
+    - 매직 넘버나 하드코딩된 문자열(예: 상태값 "OPEN", "CLOSED")이 있으면 Enum이나 상수로 분리하도록 제안해줘.

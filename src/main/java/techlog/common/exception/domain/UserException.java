@@ -1,9 +1,9 @@
-package techlog.common.error.domain;
+package techlog.common.exception.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import techlog.common.error.ErrorCode;
+import techlog.common.exception.ErrorCode;
 
 @Getter
 @AllArgsConstructor

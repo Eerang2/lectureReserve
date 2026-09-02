@@ -39,6 +39,14 @@ public class UserEntity {
                 .userId(req.getUserId())
                 .userPw(req.getUserPw())
                 .name(req.getName())
+                .build();
+    }
+
+    public static UserEntity of(UserEntity user, String encodePw) {
+        return UserEntity.builder()
+                .userId(user.getUserId())
+                .userPw(encodePw)
+                .name(user.getName())
                 .role(UserRole.USER)
                 .build();
     }

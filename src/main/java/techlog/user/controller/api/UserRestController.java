@@ -1,5 +1,6 @@
 package techlog.user.controller.api;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,7 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping("/api/signup")
-    public ResponseEntity<?> signup(@RequestBody UserSignUpRequest userReq) {
+    public ResponseEntity<?> signup(@RequestBody @Valid UserSignUpRequest userReq) {
         userService.userSignUp(UserEntity.from(userReq));
         return ResponseEntity.ok("201"); // 회원가입 성공
     }

@@ -2,11 +2,13 @@ package techlog.user.controller.api.data;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class UserSignUpRequest {
 
     @NotBlank(message = "아이디를 입력해주세요.")

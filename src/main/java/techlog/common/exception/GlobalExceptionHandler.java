@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import techlog.common.exception.domain.CommonException;
 
 
@@ -35,5 +36,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(CommonException.INTERNAL_SERVER_ERROR.getHttpStatus())
                 .body(new ErrorResponse(CommonException.INTERNAL_SERVER_ERROR));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Void> handleNoResourceFoundException(NoResourceFoundException e) {
+        // 브라우저 자동 요청(favicon, devtools 등) - 로그 남길 필요 없음
+        return ResponseEntity.notFound().build();
     }
 }
